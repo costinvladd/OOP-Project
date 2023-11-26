@@ -78,11 +78,11 @@ void EventLocation::display() const {
 }
 
 int EventLocation::operator[](int index) const {
-    if (index >= 0 && index < numRows) {
+    if (index >= 0 && index < numRows) { //// Validation for out of bounds access
         return seatsPerRow[index];
     }
     else {
-        // Handle out of bounds access
+        
         std::cerr << "Error: Index out of bounds." << std::endl;
         return -1;  
     }
@@ -123,10 +123,102 @@ bool EventLocation::operator==(const EventLocation& other) const {
         std::equal(seatsPerRow, seatsPerRow + numRows, other.seatsPerRow);
 }
 
+class Event {
+private:
+    char* eventName;
+    char* eventDate;
+    char* eventTime;
+
+public:
+    static const int MAX_STRING_LENGTH = 50;
+
+    Event(const char* eventName, const char* eventDate, const char* eventTime);
+    Event(const Event& other);
+    ~Event();
+
+    const char* getEventName() const;
+    const char* getEventDate() const;
+    const char* getEventTime() const;
+
+    void display() const;
+
+    // Overloaded operators
+    Event& operator=(const Event& other);
+    friend std::ostream& operator<<(std::ostream& os, const Event& event);
+    bool operator==(const Event& other) const;
+};
+
+Event::Event(const char* eventName, const char* eventDate, const char* eventTime) {
+    this->eventName = new char[MAX_STRING_LENGTH];
+    this->eventDate = new char[MAX_STRING_LENGTH];
+    this->eventTime = new char[MAX_STRING_LENGTH];
+
+    strncpy(this->eventName, eventName, MAX_STRING_LENGTH);
+    strncpy(this->eventDate, eventDate, MAX_STRING_LENGTH);
+    strncpy(this->eventTime, eventTime, MAX_STRING_LENGTH);
+}
+
+Event::Event(const Event& other) {
+    eventName = new char[MAX_STRING_LENGTH];
+    eventDate = new char[MAX_STRING_LENGTH];
+    eventTime = new char[MAX_STRING_LENGTH];
+
+    strncpy(eventName, other.eventName, MAX_STRING_LENGTH);
+    strncpy(eventDate, other.eventDate, MAX_STRING_LENGTH);
+    strncpy(eventTime, other.eventTime, MAX_STRING_LENGTH);
+}
+
+Event::~Event() {
+    delete[] eventName;
+    delete[] eventDate;
+    delete[] eventTime;
+}
+
+const char* Event::getEventName() const {
+    return eventName;
+}
+
+const char* Event::getEventDate() const {
+    return eventDate;
+}
+
+const char* Event::getEventTime() const {
+    return eventTime;
+}
+
+void Event::display() const {
+    std::cout << "Event: Name=" << eventName
+        << ", Date=" << eventDate
+        << ", Time=" << eventTime << std::endl;
+}
+
+Event& Event::operator=(const Event& other) {
+    if (this != &other) {  
+        strncpy(eventName, other.eventName, MAX_STRING_LENGTH);
+        strncpy(eventDate, other.eventDate, MAX_STRING_LENGTH);
+        strncpy(eventTime, other.eventTime, MAX_STRING_LENGTH);
+    }
+    return *this;
+}
+
+std::ostream& operator<<(std::ostream& os, const Event& event) {
+    os << "Event: Name=" << event.eventName
+        << ", Date=" << event.eventDate
+        << ", Time=" << event.eventTime;
+    return os;
+}
+
+bool Event::operator==(const Event& other) const {
+    return strncmp(eventName, other.eventName, MAX_STRING_LENGTH) == 0 &&
+        strncmp(eventDate, other.eventDate, MAX_STRING_LENGTH) == 0 &&
+        strncmp(eventTime, other.eventTime, MAX_STRING_LENGTH) == 0;
+}
+
+
 int main() {
     EventLocation location(0, 0, 0, nullptr);
     Event event("", "", "");
-    Ticket ticket("");
+   
 
     
     return 0;
