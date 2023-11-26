@@ -123,6 +123,7 @@ bool EventLocation::operator==(const EventLocation& other) const {
         std::equal(seatsPerRow, seatsPerRow + numRows, other.seatsPerRow);
 }
 
+// Definition of the Event class
 class Event {
 private:
     char* eventName;
@@ -132,23 +133,36 @@ private:
 public:
     static const int MAX_STRING_LENGTH = 50;
 
+    // Constructor: initializes an Event with the given name, date, and time
     Event(const char* eventName, const char* eventDate, const char* eventTime);
+
+    // Copy constructor: creates a copy of another Event
     Event(const Event& other);
+
+    // Destructor: cleans up dynamically allocated memory
     ~Event();
 
+    // Getter methods for accessing event details
     const char* getEventName() const;
     const char* getEventDate() const;
     const char* getEventTime() const;
 
+    // Display method: Prints the details of the event
     void display() const;
 
-    // Overloaded operators
+    // Overloaded assignment operator: assigns the values of another Event
     Event& operator=(const Event& other);
+
+    // Overloaded operator <<: allows printing an Event to an ostream
     friend std::ostream& operator<<(std::ostream& os, const Event& event);
+
+    // Overloaded  operator = : checks if two Events are equal
     bool operator==(const Event& other) const;
 };
 
+// Constructor implementation
 Event::Event(const char* eventName, const char* eventDate, const char* eventTime) {
+    // Allocating memory for the character arrays and copying values
     this->eventName = new char[MAX_STRING_LENGTH];
     this->eventDate = new char[MAX_STRING_LENGTH];
     this->eventTime = new char[MAX_STRING_LENGTH];
@@ -158,7 +172,9 @@ Event::Event(const char* eventName, const char* eventDate, const char* eventTime
     strncpy(this->eventTime, eventTime, MAX_STRING_LENGTH);
 }
 
+// Copy constructor implementation
 Event::Event(const Event& other) {
+   
     eventName = new char[MAX_STRING_LENGTH];
     eventDate = new char[MAX_STRING_LENGTH];
     eventTime = new char[MAX_STRING_LENGTH];
@@ -168,12 +184,15 @@ Event::Event(const Event& other) {
     strncpy(eventTime, other.eventTime, MAX_STRING_LENGTH);
 }
 
+// Destructor implementation
 Event::~Event() {
+    // Deallocating memory for the character arrays
     delete[] eventName;
     delete[] eventDate;
     delete[] eventTime;
 }
 
+// Getter methods
 const char* Event::getEventName() const {
     return eventName;
 }
@@ -186,14 +205,16 @@ const char* Event::getEventTime() const {
     return eventTime;
 }
 
+// Display methods 
 void Event::display() const {
     std::cout << "Event: Name=" << eventName
         << ", Date=" << eventDate
         << ", Time=" << eventTime << std::endl;
 }
 
+// Overloaded operator =
 Event& Event::operator=(const Event& other) {
-    if (this != &other) {  
+    if (this != &other) {  // Check for self-assignment
         strncpy(eventName, other.eventName, MAX_STRING_LENGTH);
         strncpy(eventDate, other.eventDate, MAX_STRING_LENGTH);
         strncpy(eventTime, other.eventTime, MAX_STRING_LENGTH);
@@ -201,6 +222,7 @@ Event& Event::operator=(const Event& other) {
     return *this;
 }
 
+// Overloaded operator <<
 std::ostream& operator<<(std::ostream& os, const Event& event) {
     os << "Event: Name=" << event.eventName
         << ", Date=" << event.eventDate
@@ -208,6 +230,7 @@ std::ostream& operator<<(std::ostream& os, const Event& event) {
     return os;
 }
 
+// Overloaded operator ==
 bool Event::operator==(const Event& other) const {
     return strncmp(eventName, other.eventName, MAX_STRING_LENGTH) == 0 &&
         strncmp(eventDate, other.eventDate, MAX_STRING_LENGTH) == 0 &&
@@ -218,7 +241,7 @@ bool Event::operator==(const Event& other) const {
 int main() {
     EventLocation location(0, 0, 0, nullptr);
     Event event("", "", "");
-   
+
 
     
     return 0;
