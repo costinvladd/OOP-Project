@@ -237,12 +237,124 @@ bool Event::operator==(const Event& other) const {
         strncmp(eventTime, other.eventTime, MAX_STRING_LENGTH) == 0;
 }
 
+// Definition of the Ticket class
+class Ticket {
+private:
+    // Static member to track the next available ticket ID
+    static int nextTicketId;
+
+    int ticketId;
+    char* ticketType;
+
+public:
+    // Constructor 
+    Ticket(const char* ticketType);
+
+    // Destructor
+    ~Ticket();
+
+    // Getter methods for accessing ticket details
+    int getTicketId() const;
+    const char* getTicketType() const;
+
+    // Display method
+    void display() const;
+
+    // Overloaded = operator
+    Ticket& operator=(const Ticket& other);
+
+    // Overloaded stream insertion operator
+    friend std::ostream& operator<<(std::ostream& os, const Ticket& ticket);
+
+    // Overloaded equality operator
+    bool operator==(const Ticket& other) const;
+};
+
+// Initialize the static member for the next ticket ID
+int Ticket::nextTicketId = 1;
+
+// Constructor 
+Ticket::Ticket(const char* ticketType) {
+    // Allocating memory for the character array and copy ticketType
+    this->ticketType = new char[Event::MAX_STRING_LENGTH];
+    strncpy(this->ticketType, ticketType, Event::MAX_STRING_LENGTH);
+
+    // Assigning a unique ticket ID and incrementing the counter for the next ticket
+    this->ticketId = nextTicketId++;
+}
+
+// Destructor 
+Ticket::~Ticket() {
+  
+    delete[] ticketType;
+}
+
+// Getter method
+int Ticket::getTicketId() const {
+    return ticketId;
+}
+
+const char* Ticket::getTicketType() const {
+    return ticketType;
+}
+
+// Display method 
+void Ticket::display() const {
+    std::cout << "Ticket ID=" << ticketId << ", Type=" << ticketType << std::endl;
+}
+
+// Overloaded = operator 
+Ticket& Ticket::operator=(const Ticket& other) {
+    if (this != &other) {  // Check for self-assignment
+        // Copy ticketType from another Ticket
+        strncpy(ticketType, other.ticketType, Event::MAX_STRING_LENGTH);
+    }
+    return *this;
+}
+
+// Overloaded stream insertion operator 
+std::ostream& operator<<(std::ostream& os, const Ticket& ticket) {
+    os << "Ticket ID=" << ticket.ticketId << ", Type=" << ticket.ticketType;
+    return os;
+}
+
+// Overloaded equality operator 
+bool Ticket::operator==(const Ticket& other) const {
+    return ticketId == other.ticketId &&
+        strncmp(ticketType, other.ticketType, Event::MAX_STRING_LENGTH) == 0;
+}
+
 
 int main() {
-    EventLocation location(0, 0, 0, nullptr);
-    Event event("", "", "");
+     
+    int maxSeats = 100;
+    int numRows = 5;
+    int numZones = 2;
+    int* seatsPerRow = new int[numRows] {20, 20, 20, 20, 20};
 
+    EventLocation location(maxSeats, numRows, numZones, seatsPerRow);
+
+    std::cout << "Event Location Details:\n";
+    location.display();
+
+    const char eventName[] = "Movie Night";
+    const char eventDate[] = "2023-12-01";
+    const char eventTime[] = "19:30";
+
+    Event movieEvent(eventName, eventDate, eventTime);
+
+    std::cout << "\nEvent Details:\n";
+    movieEvent.display();
+
+    const char ticketType[] = "VIP";
+
+    Ticket vipTicket(ticketType);
+
+    std::cout << "\nGenerated Ticket Details:\n";
+    vipTicket.display();
 
     
+    delete[] seatsPerRow;
+
     return 0;
 }
