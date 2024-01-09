@@ -397,5 +397,129 @@ int generateRandomTicketId() {
 }
 
 int main() {
+    int maxSeats, numRows, numZones;
+
+    std::cout << "Enter the characteristics of the event location:\n";
+    std::cout << "Maximum number of seats: ";
+    std::cin >> maxSeats;
+
+    std::cout << "Number of rows: ";
+    std::cin >> numRows;
+
+    std::cout << "Number of zones: ";
+    std::cin >> numZones;
+
+    int* seatsPerRow = new int[numRows];
+    std::cout << "Enter the number of seats for each row:\n";
+    for (int i = 0; i < numRows; ++i) {
+        std::cout << "Row " << i + 1 << ": ";
+        std::cin >> seatsPerRow[i];
+    }
+
+    EventLocation location(maxSeats, numRows, numZones, seatsPerRow);
+
+
+    char eventName[Event::MAX_STRING_LENGTH];
+    char eventDate[Event::MAX_STRING_LENGTH];
+    char eventTime[Event::MAX_STRING_LENGTH];
+
+    std::cout << "Enter the characteristics of the event:\n";
+    std::cout << "Event name: ";
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    std::cin.getline(eventName, Event::MAX_STRING_LENGTH);
+
+    std::cout << "Event date: ";
+    std::cin.getline(eventDate, Event::MAX_STRING_LENGTH);
+
+    std::cout << "Event time: ";
+    std::cin.getline(eventTime, Event::MAX_STRING_LENGTH);
+
+    Event event(eventName, eventDate, eventTime);
+
+    // Menu
+    int choice;
+    Ticket* ticket = nullptr;
+    do {
+        std::cout << "\nMenu:\n";
+        std::cout << "1. Display Event Location Details\n";
+        std::cout << "2. Display Event Details\n";
+        std::cout << "3. Generate and Display Nominal Ticket\n";
+        std::cout << "4. Validate Ticket\n";
+        std::cout << "0. Exit\n";
+        std::cout << "Enter your choice: ";
+        std::cin >> choice;
+
+        int ticketId;
+
+        switch (choice) {
+        case 1:
+
+            std::cout << "Event Location Details:\n";
+            location.display();
+            break;
+
+        case 2:
+
+            std::cout << "Event Details:\n";
+            event.display();
+            break;
+
+        case 3:
+
+            std::cout << "Enter ticket type (e.g., VIP, Lawn, Tribune, Boxes): ";
+            char ticketType[Event::MAX_STRING_LENGTH];
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            std::cin.getline(ticketType, Event::MAX_STRING_LENGTH);
+
+            ticketId = generateRandomTicketId();
+            ticket = nullptr;
+
+
+            if (strcmp(ticketType, "VIP") == 0) {
+                ticket = new MovieTicket(ticketType, 1, 1, 1);
+            }
+            else if (strcmp(ticketType, "Lawn") == 0) {
+                ticket = new FootballTicket(ticketType, 1, 1, 1);
+            }
+
+            if (ticket != nullptr) {
+                std::cout << "Nominal Ticket Generated:\n";
+                ticket->display();
+                std::cout << "Ticket ID: " << ticketId << std::endl;
+            }
+            else {
+                std::cout << "Error generating ticket. Please try again.\n";
+            }
+
+            delete ticket;
+            break;
+
+        case 4:
+
+            int enteredTicketId;
+            std::cout << "Enter the ticket ID to validate: ";
+            std::cin >> enteredTicketId;
+
+            if (enteredTicketId > 0 && enteredTicketId < 1000000) {
+                std::cout << "Ticket ID " << enteredTicketId << " is valid.\n";
+            }
+            else {
+                std::cout << "Ticket ID " << enteredTicketId << " is invalid.\n";
+            }
+            break;
+
+        case 0:
+
+            std::cout << "Exiting the program.\n";
+            break;
+
+        default:
+            std::cout << "Invalid choice. Please enter a valid option.\n";
+        }
+
+    } while (choice != 0);
+
+    delete[] seatsPerRow;
+
     return 0;
 }
