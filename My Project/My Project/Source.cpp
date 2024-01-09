@@ -352,6 +352,50 @@ void MovieTicket::display() const {
         << ", Row=" << row << ", Seat=" << seat << std::endl;
 }
 
+class TheaterTicket : public Ticket {
+private:
+    int category;
+    int theaterRow;
+    int theaterSeat;
+
+public:
+    TheaterTicket(const char* ticketType, int category, int row, int seat);
+    ~TheaterTicket();
+
+    int getCategory() const;
+    int getTheaterRow() const;
+    int getTheaterSeat() const;
+
+    void display() const override;
+};
+
+TheaterTicket::TheaterTicket(const char* ticketType, int category, int row, int seat)
+    : Ticket(ticketType), category(category), theaterRow(row), theaterSeat(seat) {}
+
+TheaterTicket::~TheaterTicket() {}
+
+int TheaterTicket::getCategory() const {
+    return category;
+}
+
+int TheaterTicket::getTheaterRow() const {
+    return theaterRow;
+}
+
+int TheaterTicket::getTheaterSeat() const {
+    return theaterSeat;
+}
+
+void TheaterTicket::display() const {
+    std::cout << "Theater Ticket - " << *this << ", Category=" << category
+        << ", Row=" << theaterRow << ", Seat=" << theaterSeat << std::endl;
+}
+
+int generateRandomTicketId() {
+    static const int MAX_TICKET_ID = 1000000;
+    return rand() % MAX_TICKET_ID + 1;
+}
+
 int main() {
     return 0;
 }
