@@ -313,6 +313,45 @@ void FootballTicket::display() const {
               << ", Row=" << row << ", Seat=" << seat << std::endl;
 }
 
+class MovieTicket : public Ticket {
+private:
+    int area;
+    int row;
+    int seat;
+
+public:
+    MovieTicket(const char* ticketType, int area, int row, int seat);
+    ~MovieTicket();
+
+    int getArea() const;
+    int getRow() const;
+    int getSeat() const;
+
+    void display() const override;
+};
+
+MovieTicket::MovieTicket(const char* ticketType, int area, int row, int seat)
+    : Ticket(ticketType), area(area), row(row), seat(seat) {}
+
+MovieTicket::~MovieTicket() {}
+
+int MovieTicket::getArea() const {
+    return area;
+}
+
+int MovieTicket::getRow() const {
+    return row;
+}
+
+int MovieTicket::getSeat() const {
+    return seat;
+}
+
+void MovieTicket::display() const {
+    std::cout << "Movie Ticket - " << *this << ", Area=" << area
+        << ", Row=" << row << ", Seat=" << seat << std::endl;
+}
+
 int main() {
     return 0;
 }
